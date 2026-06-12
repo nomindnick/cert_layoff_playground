@@ -1,0 +1,54 @@
+# cert_layoff_playground
+
+Prototyping experiments on a corpus of California OAH certificated-employee
+(teacher) layoff decisions — Education Code §§ 44949/44955.
+
+## Background
+
+California school districts lay off teachers through a statutory process;
+disputes go to the Office of Administrative Hearings, where an ALJ issues a
+proposed decision. These decisions are not published or searchable anywhere.
+My firm assembled a large set via Public Records Act requests, and for
+decades attorneys hand-wrote annual summary volumes cataloguing each year's
+holdings by issue — a practice that died out in the mid-2010s.
+
+A previous project built and validated an LLM extraction pipeline that turns
+each decision into a rich structured record (issues, holdings, arguments by
+party, facts, authorities, reasoning, dispositions). A production run over
+the full ~2,800-decision corpus is upcoming.
+
+**This repo asks: what could we build on top of that corpus?** It is a
+deliberate playground — many small prototypes, each testing one idea, each
+ending in an honest verdict. Falsifying an idea cheaply counts as success.
+The aim is that when the full corpus lands, there's a portfolio of validated
+concepts ready to build for real, not guesses.
+
+Everything runs against a two-year sample corpus (plus 35 years of parsed
+human summary holdings) on local LLMs — AMD Strix Halo, 128GB unified
+memory, models up to ~128B via ollama.
+
+## The data is not here
+
+The underlying decisions were obtained via CPRA and contain individuals'
+names. The corpus lives outside this repo, all derived outputs are
+untracked, and anything committed cites decisions de-identified — by
+district and ALJ only — following the convention of the original human
+volumes.
+
+## Prototype gallery
+
+| ID | Prototype | State | Verdict |
+|----|-----------|-------|---------|
+| 01 | [Hybrid corpus search + MCP server](prototypes/01-search-mcp/SPEC.md) | **validated** | BM25+embedding hybrid over holdings; known-item R@10 0.87–0.95; corpus exposed as MCP tools for agent sessions. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
+
+*(see [IDEAS.md](IDEAS.md) for the full slate)*
+
+## Repo layout
+
+- `IDEAS.md` — the idea ledger, from concrete candidates to half-formed concepts
+- `STATUS.md` — live dashboard of prototype states + cross-cutting lessons
+- `prototypes/NN-slug/` — one directory per prototype: `SPEC.md` (detailed
+  enough to build from cold), code, `FINDINGS.md` (the verdict)
+- `corpuslib/` — shared data-access layer and a thin LLM shim over local
+  ollama
+- `templates/` — SPEC and FINDINGS templates

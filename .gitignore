@@ -1,0 +1,18 @@
+# Corpus data never enters this repo; all derived outputs stay local.
+data/
+output/
+prototypes/*/output/
+prototypes/*/data/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local config / env
+.env
+corpuslib/config.json
+
+# OS / editor
+.DS_Store

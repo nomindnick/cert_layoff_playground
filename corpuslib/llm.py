@@ -21,16 +21,22 @@ import urllib.request
 OLLAMA_BASE = "http://localhost:11434"
 
 
-def generate(backend, prompt, system=None, json_schema=None, num_ctx=None, timeout=1800):
+def generate(backend, prompt, system=None, json_schema=None, num_ctx=None,
+             timeout=1800, options=None, think=None):
     """Return the model's text completion (or parsed object if json_schema given).
 
     backend: "ollama:<model>" (the prefix is kept so FINDINGS/logs are explicit
     about provenance, and so a different runtime could be added later).
+    options: extra ollama options merged in (e.g. {"temperature": 0, "seed": 7}).
+    think: pass False for reasoning models (qwen3.5:*) when you want the answer,
+      not the chain-of-thought — otherwise they spend the whole token budget in
+      the hidden thinking channel and return an empty response. (Lesson:
+      02-taste-judge, 2026-06-13.)
     """
     kind, _, model = backend.partition(":")
     if kind != "ollama":
         raise ValueError(f"unknown backend {backend!r} (only ollama:<model> is supported)")
-    options = {}
+    options = dict(options or {})
     # Lesson (lab REFINEMENTS #1): never let a fixed context budget silently
     # truncate an outlier-length prompt.
     est_tokens = len(prompt) // 3 + 1024
@@ -40,6 +46,8 @@ def generate(backend, prompt, system=None, json_schema=None, num_ctx=None, timeo
         body["system"] = system
     if json_schema:
         body["format"] = json_schema
+    if think is not None:
+        body["think"] = think
     req = urllib.request.Request(
         f"{OLLAMA_BASE}/api/generate",
         json.dumps(body).encode(),
@@ -48,7 +56,13 @@ def generate(backend, prompt, system=None, json_schema=None, num_ctx=None, timeo
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         out = json.loads(resp.read())
     text = out["response"]
-    return json.loads(text) if json_schema else text
+    if not json_schema:
+        return text
+    # some models fence JSON even under format mode; tolerate it
+    t = text.strip()
+    if t.startswith("```"):
+        t = t.strip("`").removeprefix("json").strip()
+    return json.loads(t)
 
 
 def gpu_status():

@@ -11,6 +11,7 @@ States: `idea → spec → building → testing → validated | falsified | park
 | ID | Prototype | State | Compute | Verdict (one line) |
 |----|-----------|-------|---------|--------------------|
 | 01 | [search-mcp (F1)](prototypes/01-search-mcp/SPEC.md) | **validated** | embeddings | Hybrid search clears bar (2009 R@10 0.868/MRR 0.766; 2004 0.951/0.823); MCP server live via `.mcp.json`. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
+| 02 | [taste-judge (W7)](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | local-LLM-heavy | LLM judge loses to cheap logistic regression & adds no signal; both ~chance on held-out 2004. Taste is mostly mechanical + year-specific. P5 → transparent feature filter, not LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
 
 ## Lessons
 
@@ -46,3 +47,23 @@ lesson, the prototype that surfaced it, and the date.
 - **Known-item evals built from token-similarity alignments are biased
   toward BM25** — judge semantic retrieval on paraphrase queries too before
   concluding embeddings don't help. *(01-search-mcp, 2026-06-12)*
+- **Reasoning models (qwen3.5:*) need `think=False` for structured output** —
+  otherwise they spend the whole token budget in the hidden thinking channel
+  and return an empty response. Now in `corpuslib.llm.generate(think=)`.
+  With thinking off, qwen3.5:122b (MoE) is also *faster* than gemma4:31b.
+  *(02-taste-judge, 2026-06-13)*
+- **temp 0 + grammar-constrained gemma4 → repetition loops** (timeouts,
+  unterminated JSON, out-of-range numbers). Use temp ~0.2, a `num_predict`
+  cap, and a hotter retry. *(02-taste-judge, 2026-06-13)*
+- **Always run a small (~50-item) sanity gate before a multi-hour LLM grind**
+  — it caught the two failures above and a wrong task framing for the cost of
+  minutes. *(02-taste-judge, 2026-06-13)*
+- **Beat the cheap baseline first.** A logistic regression on ~8 mechanical
+  features matched/beat 31B and 122B LLM judges at reproducing editorial
+  selection. For "is this X?" classification over structured records, run the
+  deterministic baseline before assuming an LLM is needed. *(02-taste-judge,
+  2026-06-13)*
+- **Validate on a held-out slice, not just CV.** The taste signal that looked
+  real on 2009 (the dev year) collapsed to ~chance on held-out 2004 — it was
+  year/editor-specific. Single-year metrics overstated generality.
+  *(02-taste-judge, 2026-06-13)*

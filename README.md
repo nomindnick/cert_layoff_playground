@@ -40,6 +40,7 @@ volumes.
 | ID | Prototype | State | Verdict |
 |----|-----------|-------|---------|
 | 01 | [Hybrid corpus search + MCP server](prototypes/01-search-mcp/SPEC.md) | **validated** | BM25+embedding hybrid over holdings; known-item R@10 0.87–0.95; corpus exposed as MCP tools for agent sessions. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
+| 02 | [Editorial-taste judge](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | Can an LLM reproduce the human editors' selection of "noteworthy" holdings? It loses to a simple logistic regression and adds no signal; both fall to ~chance on a held-out year. Taste is mostly mechanical and year-specific — curate with a transparent feature filter, not an LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
 
 *(see [IDEAS.md](IDEAS.md) for the full slate)*
 

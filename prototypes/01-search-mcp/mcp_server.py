@@ -19,7 +19,7 @@ sys.path.insert(0, str(HERE))
 from mcp.server.fastmcp import FastMCP  # noqa: E402
 
 from corpuslib import load_decisions  # noqa: E402
-from deident import deidentify  # noqa: E402
+from corpuslib.deident import deidentify  # noqa: E402
 from engine import Engine  # noqa: E402
 
 mcp = FastMCP("layoff-corpus")

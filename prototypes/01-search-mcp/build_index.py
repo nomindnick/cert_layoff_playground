@@ -25,7 +25,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))  # repo root, for corpuslib
 
 from corpuslib import load_decisions, load_gold_holdings  # noqa: E402
-from deident import alj_surname, deidentify, district_short  # noqa: E402
+from corpuslib.deident import alj_surname, deidentify, district_short  # noqa: E402
 
 OUT = HERE / "output" / "indexes"
 

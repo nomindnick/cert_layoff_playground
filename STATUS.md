@@ -12,6 +12,7 @@ States: `idea → spec → building → testing → validated | falsified | park
 |----|-----------|-------|---------|--------------------|
 | 01 | [search-mcp (F1)](prototypes/01-search-mcp/SPEC.md) | **validated** | embeddings | Hybrid search clears bar (2009 R@10 0.868/MRR 0.766; 2004 0.951/0.823); MCP server live via `.mcp.json`. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
 | 02 | [taste-judge (W7)](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | local-LLM-heavy | LLM judge loses to cheap logistic regression & adds no signal; both ~chance on held-out 2004. Taste is mostly mechanical + year-specific. P5 → transparent feature filter, not LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
+| 03 | [alj-scouting (P2)](prototypes/03-alj-scouting/SPEC.md) | **validated** | none (+ local-LLM-light) | Per-ALJ scouting reports are real, not a horoscope: win-rate & issue-mix differ across ALJs beyond a permutation null (within-year p≈.0003). 59 usable ALJs; only 2 individual win-rate leans survive BH-FDR on 2yr data (group signal real, per-ALJ thin). Ship the deterministic cited render; LLM narrative stays 99% grounded / 100% discriminable when forced to obey significance labels. [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
 
 ## Lessons
 
@@ -67,3 +68,26 @@ lesson, the prototype that surfaced it, and the date.
   real on 2009 (the dev year) collapsed to ~chance on held-out 2004 — it was
   year/editor-specific. Single-year metrics overstated generality.
   *(02-taste-judge, 2026-06-13)*
+- **Permutation test = the horoscope detector for per-entity profiles.** Before
+  believing any per-ALJ / per-district "tendency," shuffle the entity labels
+  across holdings and check the observed dispersion beats the null — and run a
+  *within-stratum* variant (e.g. within-year) to rule out a confound (temporal
+  drift). For ALJ scouting this cleanly separated real signal (p≈.0003) from
+  noise. Corollary: **group-level signal can be real while few individuals
+  survive multiple-comparison correction** — say both, don't overclaim
+  individuals. *(03-alj-scouting, 2026-06-13)*
+- **Deterministic-render-first, thin grounded LLM second.** The trustworthy P2
+  product was the cited dossier render (zero inference); the LLM, *when forced to
+  cite the dossier and obey its significance labels*, stayed 99% grounded and
+  100% discriminable (adversarially verified). Opposite of W7's losing LLM-gate:
+  the rule is **structured stats are the product, the LLM only presents them.**
+  *(03-alj-scouting, 2026-06-13)*
+- **Surname-only joins conflate entities.** Gold cites carry ALJ surnames only,
+  so District(Johnson) silently merged Perry O. + Vallera J. (two judges). Detect
+  collisions from richer records (decision raw full names, accent/whitespace
+  folded) and sequester; flag that single-source surnames can't be
+  disambiguated. *(03-alj-scouting, 2026-06-13)*
+- **Workflow `args` arrive as a JSON *string*, not a parsed object** — destructure
+  it and you get `undefined` fields with no error. Parse defensively at the top:
+  `const A = typeof args === 'string' ? JSON.parse(args) : args`.
+  *(03-alj-scouting, 2026-06-13)*

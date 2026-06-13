@@ -33,7 +33,8 @@ later, from validated pieces.
 
 ## Foundation
 
-- **F1. Hybrid search + corpus MCP server** *(embeddings)* — FPPC-pattern
+- **F1. Hybrid search + corpus MCP server** *(embeddings)* — **[built →
+  prototype 01, validated]** FPPC-pattern
   BM25 + embedding retrieval over holdings and decisions, faceted by
   issue/ALJ/district/outcome/year. Twist: expose as an MCP server so Claude
   sessions (and local models) can use the corpus as a tool — the substrate
@@ -46,10 +47,13 @@ later, from validated pieces.
   approach) → retrieve similar holdings → issue-by-issue risk memo with
   verifiable cites, including what respondents will argue (we have
   structured arguments-by-party data).
-- **P2. ALJ scouting reports** *(local-LLM-light)* — per-ALJ dossiers:
-  issue-by-issue tendencies, persuasive arguments, procedural strictness.
-  Gold holdings are ALJ-tagged across 35 years, so this is buildable now
-  with real longitudinal depth.
+- **P2. ALJ scouting reports** *(local-LLM-light)* — **[built → prototype 03,
+  validated]** per-ALJ dossiers: issue-by-issue tendencies, persuasive
+  arguments, procedural strictness. Gold holdings are ALJ-tagged across 35
+  years, so this is buildable now with real longitudinal depth. *Result:
+  tendencies are real (not a horoscope) by permutation test; 59 usable ALJs;
+  ship the deterministic cited render. The editors' own 535 ALJ-attributed
+  observations are the trustworthy core.*
 - **P3. Resolution linter** *(local-LLM-light)* — feed a draft board
   resolution / skip criteria / tiebreak criteria; check against every way
   similar artifacts were attacked in the corpus; flag exposure with cites.
@@ -89,7 +93,8 @@ later, from validated pieces.
   different decades: has the de facto standard moved while the statute stood
   still? Diff reasoning chains across eras with a big model.
 - **W7. Editorial-taste judge** *(local-LLM-light; subagent-fan-out
-  friendly)* — can an LLM reproduce the human editors' selection of
+  friendly)* — **[built → prototype 02, partially validated (weak)]** can an
+  LLM reproduce the human editors' selection of
   noteworthy holdings? Rare luxury: taste has gold labels here — the
   2009/2004 eval alignments mark which system holdings the human volume
   included (~600 candidates → ~260 selections in 2009). Decompose before

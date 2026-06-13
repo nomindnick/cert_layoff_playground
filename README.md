@@ -41,6 +41,7 @@ volumes.
 |----|-----------|-------|---------|
 | 01 | [Hybrid corpus search + MCP server](prototypes/01-search-mcp/SPEC.md) | **validated** | BM25+embedding hybrid over holdings; known-item R@10 0.87–0.95; corpus exposed as MCP tools for agent sessions. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
 | 02 | [Editorial-taste judge](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | Can an LLM reproduce the human editors' selection of "noteworthy" holdings? It loses to a simple logistic regression and adds no signal; both fall to ~chance on a held-out year. Taste is mostly mechanical and year-specific — curate with a transparent feature filter, not an LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
+| 03 | [ALJ scouting reports](prototypes/03-alj-scouting/SPEC.md) | **validated** | Per-judge dossiers — issue footprint, outcome tendencies, procedural posture, and the human editors' own attributed observations. A permutation test confirms the tendencies are real, not a horoscope (ALJs differ in win-rate and issue mix beyond chance, surviving a within-year control); only the deterministic, fully-cited render is shipped, with a thin LLM narrative that stays 99% grounded. [sample](prototypes/03-alj-scouting/sample_report.md) · [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
 
 *(see [IDEAS.md](IDEAS.md) for the full slate)*
 

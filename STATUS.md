@@ -13,6 +13,7 @@ States: `idea → spec → building → testing → validated | falsified | park
 | 01 | [search-mcp (F1)](prototypes/01-search-mcp/SPEC.md) | **validated** | embeddings | Hybrid search clears bar (2009 R@10 0.868/MRR 0.766; 2004 0.951/0.823); MCP server live via `.mcp.json`. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
 | 02 | [taste-judge (W7)](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | local-LLM-heavy | LLM judge loses to cheap logistic regression & adds no signal; both ~chance on held-out 2004. Taste is mostly mechanical + year-specific. P5 → transparent feature filter, not LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
 | 03 | [alj-scouting (P2)](prototypes/03-alj-scouting/SPEC.md) | **validated** | none (+ local-LLM-light) | Per-ALJ scouting reports are real, not a horoscope: win-rate & issue-mix differ across ALJs beyond a permutation null (within-year p≈.0003). 59 usable ALJs; only 2 individual win-rate leans survive BH-FDR on 2yr data (group signal real, per-ALJ thin). Ship the deterministic cited render; LLM narrative stays 99% grounded / 100% discriminable when forced to obey significance labels. [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
+| 04 | [deep-research (W9 s1)](prototypes/04-deep-research/SPEC.md) | **validated (stage 1)** | none | Claude + corpus-as-tool = a real deep-research harness. 4 hard longitudinal Qs; **~100% of cites grounded** on independent re-query, 3/4 judged non-obvious. Failure mode is subtle legal **over-generalization in prose**, not fake cites — caught by an adversarial verify pass. Stage 2 (can a *local* model orchestrate the loop) is the open question. [FINDINGS](prototypes/04-deep-research/FINDINGS.md) |
 
 ## Lessons
 
@@ -91,3 +92,17 @@ lesson, the prototype that surfaced it, and the date.
   it and you get `undefined` fields with no error. Parse defensively at the top:
   `const A = typeof args === 'string' ? JSON.parse(args) : args`.
   *(03-alj-scouting, 2026-06-13)*
+- **The corpus deep-research loop's failure mode is mis-characterization, not
+  fabrication.** Agents driving the corpus got ~100% of *cites* right (every
+  holding existed, correctly attributed) but occasionally **over-generalized a
+  legal characterization on top of a correct cite** (e.g. framing the March-15
+  rule as keying on employee receipt vs. district mailing). An **independent
+  verify pass that re-queries the source** catches this cheaply; agents also
+  self-rate conservatively (the judge upgraded 3/4 insights to non-obvious). Any
+  attorney-facing generator = generate → re-query-verify each claim → leave legal
+  characterization to a human. *(04-deep-research, 2026-06-13)*
+- **Non-roster names survive into research/retrieval output.** `deidentify`
+  covers roster respondents only, so a *retained junior teacher* named in a
+  holding can leak into a snippet. Any deep-research / search output needs a
+  **name-scrub gate** before an external surface. Extends the build-time-de-id
+  boundary. *(04-deep-research, 2026-06-13)*

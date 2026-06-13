@@ -113,7 +113,8 @@ later, from validated pieces.
   candidate observations for expert review, never auto-published. Highest
   difficulty; falsifying it cheaply is a fine outcome.
 - **W9. Corpus deep-research harness** *(local-LLM-heavy; stage 1 is
-  cheap)* — the agentic plan→search→read→synthesize loop over the corpus.
+  cheap)* — **[stage 1 built → prototype 04, validated; stage 2 open]** the
+  agentic plan→search→read→synthesize loop over the corpus.
   Stage 1 (near-free, rides on F1): Claude Code session + corpus MCP server
   IS a deep-research harness — ask hard longitudinal questions, judge
   whether the pattern yields insight worth having. Stage 2 (the real

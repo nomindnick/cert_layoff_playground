@@ -1,0 +1,23 @@
+{
+ "matter_id": "oakmesa-2026",
+ "_note": "SYNTHETIC — invented district and facts. ALJ unknown (tests the no-ALJ path). Exercises procedural defects (March-15 mailing, over-noticing on a bumping theory, ADA/FTE prep-period calculation) + PKS reduction of a categorically-funded program.",
+ "district": "Oak Mesa Elementary",
+ "alj": null,
+ "basis": "PKS reduction under Ed. Code 44955: elimination of a categorically-funded (Title I) intervention-coach program whose grant funding lapsed, plus an ADA decline.",
+ "reductions": [
+  "4.0 FTE",
+  "elimination of the categorically-funded Title I intervention-coach positions"
+ ],
+ "proposed_skips": [],
+ "procedural_facts": [
+  "One preliminary notice was mailed March 16 — one day after the deadline — because of an address error in the personnel file; the employee did receive it.",
+  "The board resolution adopted Feb 28 specified 4.0 FTE, but the district served preliminary notices on 6 employees on the theory that bumping could reach them.",
+  "Respondents contend the district's FTE calculation is wrong because it did not count teacher preparation periods in determining full-time loads."
+ ],
+ "tiebreak": {
+  "criteria": null,
+  "lottery_used": false
+ },
+ "board_resolution_criteria": "Resolution adopted Feb 28 authorizing reduction of 4.0 FTE and elimination of the categorically-funded intervention-coach program.",
+ "attorney_concerns": "One notice went out March 16 because of a bad address — is that defect fatal? We noticed 6 teachers though the resolution names 4.0 FTE, because of bumping — is over-noticing a problem? And respondents say our FTE math is wrong for not counting prep periods — does that sink the calculation?"
+}

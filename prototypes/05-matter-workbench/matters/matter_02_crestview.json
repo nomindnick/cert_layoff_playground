@@ -1,0 +1,40 @@
+{
+ "matter_id": "crestview-2026",
+ "_note": "SYNTHETIC — invented district and facts. Exercises bumping/competency-to-teach-the-whole-position + tie-breaking lottery sequencing.",
+ "district": "Crestview Union High",
+ "alj": "Lew",
+ "basis": "PKS reduction of particular kinds of services (eliminating selected elective/vocational courses) plus an ADA decline.",
+ "reductions": [
+  "6.0 FTE secondary",
+  "elimination of the plastics / industrial-technology course",
+  "reduction of one counseling position",
+  "reduction of PE sections"
+ ],
+ "proposed_skips": [
+  {
+   "retained_junior_role": "school counselor",
+   "claimed_special_skill": "PPS credential plus bilingual capacity for an EL-counseling caseload",
+   "specific_need": "a designated English-learner counseling caseload",
+   "in_board_resolution": true
+  }
+ ],
+ "bumping_disputes": [
+  {
+   "senior_employee_role": "industrial-arts teacher whose plastics course is eliminated",
+   "claims": "competent to teach all of general industrial arts and ROP currently assigned to a junior teacher",
+   "district_position": "senior teacher is not competent to teach the full range of the junior's general industrial-arts / ROP assignment"
+  },
+  {
+   "senior_employee_role": "PE teacher",
+   "claims": "credentialed and competent to bump a junior teacher retained for driver training",
+   "district_position": "no showing the junior is retained for driver training specifically; speculative"
+  }
+ ],
+ "tiebreak": {
+  "criteria": "first date of paid service; then credentials held, additional authorizations, and semester units beyond the BA; final tie resolved by lottery",
+  "lottery_used": true,
+  "lottery_detail": "Two teachers shared the same first date of paid service; after applying the credential/authorization/units criteria they remained tied, so the district broke the final tie by lottery."
+ },
+ "board_resolution_criteria": "Tie-break criteria adopted in the PKS resolution; the resolution authorizes a lottery only after the objective criteria are exhausted.",
+ "attorney_concerns": "Can the senior plastics teacher bump the junior into the general industrial-arts/ROP position by claiming general competence? And we used a lottery to break a final tie after applying our other criteria — is that defensible, or should we have used some further criterion first?"
+}

@@ -43,10 +43,14 @@ later, from validated pieces.
 ## Practice tools (rung 3)
 
 - **P1. Matter workbench / risk memo generator** *(local-LLM-light)* —
-  attorney describes a live layoff (district, proposed skips, tiebreak
-  approach) → retrieve similar holdings → issue-by-issue risk memo with
-  verifiable cites, including what respondents will argue (we have
-  structured arguments-by-party data).
+  **[built → prototype 05 (with P4 folded in), validated]** attorney describes a
+  live layoff (district, proposed skips, tiebreak approach) → retrieve similar
+  holdings → issue-by-issue risk memo with verifiable cites, including what
+  respondents will argue (we have structured arguments-by-party data). *Result:
+  97.8% grounded, matter-specific, useful (judge panel 3.67/5); failure mode is
+  legal characterization not citation — ship as deterministic evidence pack →
+  grounded synthesis → verify → attorney review. The interactive heart of the
+  main app.*
 - **P2. ALJ scouting reports** *(local-LLM-light)* — **[built → prototype 03,
   validated]** per-ALJ dossiers: issue-by-issue tendencies, persuasive
   arguments, procedural strictness. Gold holdings are ALJ-tagged across 35
@@ -58,9 +62,13 @@ later, from validated pieces.
   resolution / skip criteria / tiebreak criteria; check against every way
   similar artifacts were attacked in the corpus; flag exposure with cites.
   Preventive — the thing management-side clients actually pay for.
-- **P4. Argument win-rate explorer** *(embeddings)* — per issue: the
-  inventory of arguments made, by whom, success rate, and the ALJ's stated
-  reasoning. "What survives a (d)(1) skip challenge" as a queryable table.
+- **P4. Argument win-rate explorer** *(embeddings)* — **[folded into prototype
+  05 as its deterministic substrate]** per issue: the inventory of arguments
+  made, by whom, success rate, and the ALJ's stated reasoning. "What survives a
+  (d)(1) skip challenge" as a queryable table. *Built instance-based (retrieve
+  analogous holdings + their arguments/outcomes) rather than thin 2-year
+  aggregate win-rates; the standalone aggregate table can revisit at corpus
+  scale.*
 - **P5. Report studio** *(embeddings)* — parameterized summary reports:
   any year, year range, issue-across-years, ALJ, or district slice, rendered
   in the human volumes' format. The easy half of report generation —

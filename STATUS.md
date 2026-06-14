@@ -14,6 +14,7 @@ States: `idea → spec → building → testing → validated | falsified | park
 | 02 | [taste-judge (W7)](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | local-LLM-heavy | LLM judge loses to cheap logistic regression & adds no signal; both ~chance on held-out 2004. Taste is mostly mechanical + year-specific. P5 → transparent feature filter, not LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
 | 03 | [alj-scouting (P2)](prototypes/03-alj-scouting/SPEC.md) | **validated** | none (+ local-LLM-light) | Per-ALJ scouting reports are real, not a horoscope: win-rate & issue-mix differ across ALJs beyond a permutation null (within-year p≈.0003). 59 usable ALJs; only 2 individual win-rate leans survive BH-FDR on 2yr data (group signal real, per-ALJ thin). Ship the deterministic cited render; LLM narrative stays 99% grounded / 100% discriminable when forced to obey significance labels. [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
 | 04 | [deep-research (W9 s1)](prototypes/04-deep-research/SPEC.md) | **validated (stage 1)** | none | Claude + corpus-as-tool = a real deep-research harness. 4 hard longitudinal Qs; **~100% of cites grounded** on independent re-query, 3/4 judged non-obvious. Failure mode is subtle legal **over-generalization in prose**, not fake cites — caught by an adversarial verify pass. Stage 2 (can a *local* model orchestrate the loop) is the open question. [FINDINGS](prototypes/04-deep-research/FINDINGS.md) |
+| 05 | [matter-workbench (P1+P4)](prototypes/05-matter-workbench/SPEC.md) | **validated** | none (+ local-LLM-light) | Matter → issue-by-issue risk memo over a deterministic evidence pack. **97.8% grounded**, **3/3** matter-match discriminable, **3.67/5** useful (4.0 best) from a subagent judge panel. Failure mode is legal **mis-characterization on a correct cite** (not hallucination), caught by the verify pass + the memo's own "what to verify" section. Ship as pack → grounded synthesis → verify → attorney review. [sample](prototypes/05-matter-workbench/sample_memo.md) · [FINDINGS](prototypes/05-matter-workbench/FINDINGS.md) |
 
 ## Lessons
 
@@ -106,3 +107,17 @@ lesson, the prototype that surfaced it, and the date.
   holding can leak into a snippet. Any deep-research / search output needs a
   **name-scrub gate** before an external surface. Extends the build-time-de-id
   boundary. *(04-deep-research, 2026-06-13)*
+- **For attorney-facing generation, citation fidelity is the easy part; legal
+  characterization is the hard part.** Confirmed at multi-issue scale (P1): memos
+  were ~98% grounded with ~100% real, correctly-attributed cites, but the residual
+  errors were confident **rule mis-statements on top of a correct citation** (a
+  PKS attrition holding labeled "ADA-based"), which paper over genuine unsettled
+  splits. The architecture that works: deterministic evidence pack → grounded
+  synthesis → **independent verify-by-re-query** → human resolves the flagged
+  characterizations. Extends the 04 lesson. *(05-matter-workbench, 2026-06-13)*
+- **A 2-lens subagent judge panel is a usable stand-in for expert usefulness
+  review.** An advocate-lens + skeptic-lens pair produced specific, attorney-grade
+  critiques (buried the on-point favorable case; skipped a spotted facet; omitted
+  the cheapest fix) — reproducible and unblocking for prototype-stage "is this
+  actually useful?", with the human spot-checking rather than reading everything.
+  *(05-matter-workbench, 2026-06-13)*

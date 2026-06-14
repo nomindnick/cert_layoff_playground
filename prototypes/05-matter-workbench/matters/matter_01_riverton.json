@@ -1,0 +1,38 @@
+{
+ "matter_id": "riverton-2026",
+ "_note": "SYNTHETIC — invented district and facts, no real client data. Exercises skipping/competency + the 'criterion not in the board resolution' exposure + a senior-equivalence defense.",
+ "district": "Riverton Unified",
+ "alj": "Sarli",
+ "basis": "PKS reduction of particular kinds of services under Ed. Code 44955, driven by a projected budget shortfall, plus a modest ADA decline.",
+ "reductions": [
+  "12.0 FTE elementary multiple-subject",
+  "reduction of the K-3 Spanish dual-immersion strand staffing",
+  "reduction of a secondary moderate/severe special-education caseload"
+ ],
+ "proposed_skips": [
+  {
+   "retained_junior_role": "K-3 Spanish dual-immersion teacher",
+   "claimed_special_skill": "BCLAD authorization and dual-immersion training",
+   "specific_need": "maintain the board-designated K-3 Spanish dual-immersion program",
+   "in_board_resolution": true
+  },
+  {
+   "retained_junior_role": "moderate/severe special-education teacher (autism SDC)",
+   "claimed_special_skill": "moderate/severe authorization with autism certification",
+   "specific_need": "staff the autism special day class",
+   "in_board_resolution": true
+  },
+  {
+   "retained_junior_role": "online independent-study / credit-recovery teacher",
+   "claimed_special_skill": "two years' experience running an online LMS credit-recovery program",
+   "specific_need": "launch a new online credit-recovery program",
+   "in_board_resolution": false
+  }
+ ],
+ "tiebreak": {
+  "criteria": "credentials held; NCLB/HOUSSE compliance; additional authorizations; final ties by lottery",
+  "lottery_used": false
+ },
+ "board_resolution_criteria": "Resolution adopted Feb 24 lists the dual-immersion (BCLAD) and moderate/severe-autism skip criteria; it does NOT mention online-program experience.",
+ "attorney_concerns": "The online credit-recovery skip criterion was never written into our PKS resolution — is that a problem? And a senior multiple-subject teacher claims she is fluent in Spanish and could teach the dual-immersion strand herself — does that defeat our skip of the junior dual-immersion teacher?"
+}

@@ -135,6 +135,38 @@ later, from validated pieces.
   existed; the human volumes caught splits only incidentally. Inherently
   agentic (candidate pair → verify the tension is real → characterize).
   Natural W9 application.
+- **W11. Orchestrated small-model synthesis** *(local-LLM-heavy; GPU-blocked
+  while extraction runs)* — can a *dozen+ focused calls* to a small local model
+  reach Opus-4.8-level memo quality? Pipeline: outline → peer-skeptic "what's
+  missing?" rounds (for coverage) → section-by-section writers over the pack →
+  synthesis → **corpus-grounded verify→repair loop** (for correctness). Builds
+  on the prototype-05 bakeoff (single-call gemma4:31b 2.83/5 vs Opus 4.0) and
+  reuses its eval harness, so the question is exactly "does orchestration close
+  the gap?". Load-bearing design insight from the bakeoff analysis:
+  **orchestration is a coverage amplifier, not a reasoning amplifier** — peer
+  skeptics (same weak model) have *correlated* blind spots and won't fix
+  characterization errors or hallucinated cites (cf. W7); the *non*-correlated
+  reviewer that fixes correctness is the grounded verify pass (re-query the
+  corpus, repair), not more model opinions. Real motivation is **on-prem /
+  privilege** (privileged client facts never leave the box), not "free" (it's
+  free in API $ but ~10-20 min/memo of wall-clock + real orchestration
+  engineering). Falsifiable target: close ~half the 2.83→4.0 gap (predict
+  ~3.2-3.6 usefulness, grounding improving less than coverage); plateauing with
+  grounding stuck = "orchestration buys coverage not correctness," the more
+  interesting blog result. Harness can be built now, run when GPU frees.
+- **W12. Corpus distillation / post-training** *(local-LLM-heavy; weeks; bigger
+  bet)* — fine-tune a local model toward Opus on the report/legal-reasoning task
+  to close the bakeoff gap. **Distillation > domain-pretraining**: train on
+  (synthetic matter → *gold* memo) pairs where gold = Opus memos *or W11's
+  orchestrated outputs* — directly teaches structure/coverage/pack-grounding and
+  can fold a 12-call pipeline into one fast call (the real prize: orchestration
+  quality at single-call latency). Raw continued-pretraining on the 267 decisions
+  + 3,955 holdings is the blunt instrument (better legal *vocabulary*, but small
+  corpus, overfit/forgetting risk, doesn't teach the actual gaps) — skip it.
+  Bounded by the student's capacity (distillation narrows, rarely closes, the gap
+  on hard cases). **W11 feeds W12** (its outputs are the training data); justified
+  mainly by the on-prem requirement. Natural arc: bakeoff (done) → W11 → W12, a
+  three-part story. *(Discussion 2026-06-14.)*
 
 ## Concepts (not yet shaped into prototypes)
 

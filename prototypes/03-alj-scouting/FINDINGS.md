@@ -139,6 +139,41 @@ and the code is ready to re-point via `corpuslib`:
 - **Persuasive-argument patterns** currently lean on 2004/2009 only; full
   structured data makes the "how arguments landed by issue" section dense.
 
+## Longitudinal transfer — first multi-era test (2026-06-16)
+
+When the production extraction shipped its first tier (93 decisions, 2018–2025),
+we merged it with the 2004/2009 spike into a **360-decision, three-era** corpus
+(`make_merged_corpus.sh` — pure symlinks, `corpuslib` re-points unchanged) and
+re-ran the analysis via `longitudinal.py`. This is the first real test of the
+"Blocked on full corpus" prediction above, and it came back **positive, with one
+structural ceiling**:
+
+- **Corpus-wide win base is era-stable**: 0.240 (2004/09) → 0.226 (2018–25),
+  pooled 0.236. Fifteen years, essentially flat.
+- **Group-level dispersion *strengthens* with more eras** — the strongest yet:
+  win-rate dispersion across 33 ALJs / 737 holdings **Q=74, p=0.0002** (survives
+  the within-era control), vs. p=0.0004 on 2009 alone and a borderline p≈0.05 on
+  the 2018–25 slice alone. "ALJs genuinely differ" is now confirmed across three
+  eras, not one. Issue-mix re-confirmed (p=0.0002) on the larger 5,608-holding
+  gold set.
+- **More data names more judges** — pooling promoted **3** ALJs past BH-FDR
+  (Brandt, Waxman, **Sawyer** n=44) vs. the 2 on 2009 alone. Exactly the
+  "broadly nameable at scale" prediction, demonstrated.
+- **Individual tendencies persist where measurable.** Only 2 ALJs have ≥12
+  decided holdings in *both* eras (Matyszewski, Montoya) — both held their side of
+  the base rate (D: 0.12→0.08; R: 0.33→0.25). The 7 other cross-era ALJs show
+  apparent "flips," but every flip is a tiny-sample artifact (n=1–4 in one era,
+  e.g. Reyes 0.00 on a single holding) — noise, not reversal.
+- **The ceiling is judicial rotation, not data volume.** Even merged, only 9 ALJs
+  span both eras — judges get appointed/rotate/retire, so dense dockets rarely
+  bridge a 15-year gap. The **2010–2017 bridge years** (forthcoming in the full
+  corpus) are what will properly connect 2009 → 2018+.
+
+Net: a clean *positive* update — the group finding gets stronger, individual
+tendencies persist where there's data to see them, and scale names more judges,
+just as predicted. The honest caveat shifts from "is it real?" to "judicial
+turnover caps the per-ALJ longitudinal view until the bridge years land."
+
 ## Production recommendation
 
 **Build — as a build-time artifact generator, deterministic-first.** The

@@ -12,7 +12,7 @@ States: `idea → spec → building → testing → validated | falsified | park
 |----|-----------|-------|---------|--------------------|
 | 01 | [search-mcp (F1)](prototypes/01-search-mcp/SPEC.md) | **validated** | embeddings | Hybrid search clears bar (2009 R@10 0.868/MRR 0.766; 2004 0.951/0.823); MCP server live via `.mcp.json`. [FINDINGS](prototypes/01-search-mcp/FINDINGS.md) |
 | 02 | [taste-judge (W7)](prototypes/02-taste-judge/SPEC.md) | **partially validated (weak)** | local-LLM-heavy | LLM judge loses to cheap logistic regression & adds no signal; both ~chance on held-out 2004. Taste is mostly mechanical + year-specific. P5 → transparent feature filter, not LLM gate. [FINDINGS](prototypes/02-taste-judge/FINDINGS.md) |
-| 03 | [alj-scouting (P2)](prototypes/03-alj-scouting/SPEC.md) | **validated** | none (+ local-LLM-light) | Per-ALJ scouting reports are real, not a horoscope: win-rate & issue-mix differ across ALJs beyond a permutation null (within-year p≈.0003). 59 usable ALJs; only 2 individual win-rate leans survive BH-FDR on 2yr data (group signal real, per-ALJ thin). Ship the deterministic cited render; LLM narrative stays 99% grounded / 100% discriminable when forced to obey significance labels. [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
+| 03 | [alj-scouting (P2)](prototypes/03-alj-scouting/SPEC.md) | **validated** | none (+ local-LLM-light) | Per-ALJ scouting reports are real, not a horoscope: win-rate & issue-mix differ across ALJs beyond a permutation null (within-year p≈.0003). 59 usable ALJs; only 2 individual win-rate leans survive BH-FDR on 2yr data (group signal real, per-ALJ thin). Ship the deterministic cited render; LLM narrative stays 99% grounded / 100% discriminable when forced to obey significance labels. **Multi-era recheck** (merged 2004/09 + 2018–25, 360 decisions): group signal *strengthens* (Q=74, p=.0002), 3 ALJs now survive FDR, tendencies persist where measurable; ceiling is judicial rotation. [FINDINGS](prototypes/03-alj-scouting/FINDINGS.md) |
 | 04 | [deep-research (W9 s1)](prototypes/04-deep-research/SPEC.md) | **validated (stage 1)** | none | Claude + corpus-as-tool = a real deep-research harness. 4 hard longitudinal Qs; **~100% of cites grounded** on independent re-query, 3/4 judged non-obvious. Failure mode is subtle legal **over-generalization in prose**, not fake cites — caught by an adversarial verify pass. Stage 2 (can a *local* model orchestrate the loop) is the open question. [FINDINGS](prototypes/04-deep-research/FINDINGS.md) |
 | 05 | [matter-workbench (P1+P4)](prototypes/05-matter-workbench/SPEC.md) | **validated** | none (+ local-LLM-light) | Matter → issue-by-issue risk memo over a deterministic evidence pack. **97.8% grounded**, **3/3** matter-match discriminable, **3.67/5** useful (4.0 best) from a subagent judge panel. Failure mode is legal **mis-characterization on a correct cite** (not hallucination), caught by the verify pass + the memo's own "what to verify" section. Ship as pack → grounded synthesis → verify → attorney review. **Synthesizer bakeoff (6 models):** no local model nears Opus 4.8 (best local gemma4:31b 2.83/5 vs 4.0; grounding 86% vs 96%); param count ≠ legal reasoning (gpt-oss:120b *worst* + only one to fabricate cites). Opus for production, local = draft-assist. [sample](prototypes/05-matter-workbench/sample_memo.md) · [FINDINGS](prototypes/05-matter-workbench/FINDINGS.md) |
 
@@ -141,3 +141,20 @@ lesson, the prototype that surfaced it, and the date.
   (3) dense ~80GB models (mistral-medium-3.5:128b) exceed the default ~5-min
   `llama-server` load window → "context canceled"; needs a raised
   `OLLAMA_LOAD_TIMEOUT`. *(05-matter-workbench, 2026-06-14)*
+- **The production corpus re-points cleanly — the `corpuslib` promise held with
+  zero code changes.** First production extraction (`/home/nick/Projects/cert_layoff_corpus/output`,
+  93 decisions 2018–25) loads via `CORPUS_ROOT=` alone; all four artifacts sit at
+  the same relative paths (only `eval/` absent — used only by the falsified 02).
+  Schema grew to v0.4.0 but the changes that touch our read paths are non-breaking:
+  `identity.district/alj` gained `canonical*` but kept `.raw`; per-holding
+  `prevailing_party` unchanged; `pks_allowed`+`pks_not_allowed` merged to
+  `pks_reduction`. **Caveats:** no gold past 2015 (audit-only validation);
+  `alj.canonical_id` is null this run (still surname-joining, conflation risk);
+  `summary_style_holding` ~75% present; 32/93 undated (key temporal work on
+  case-number year, not `decision_date`). **Bonus — richer schema unblocks parked
+  ideas:** `board_action.artifacts` (skip/tiebreak/competency resolution language,
+  structured) is a native **P3** substrate; `holdings[].notable` is native **W8**;
+  `authorities[].role/proposition` enables the citation-graph concept. Compose
+  multi-era corpora by symlinking decision dirs into one root (no copy, privacy
+  preserved) — see `03-alj-scouting/make_merged_corpus.sh`. *(corpus integration,
+  2026-06-16)*

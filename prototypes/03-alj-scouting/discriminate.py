@@ -170,7 +170,7 @@ def main():
 
     aljs = assemble()
 
-    print("=== 1. WIN-RATE dispersion across ALJs (structured 2004/2009) ===")
+    print("=== 1. WIN-RATE dispersion across ALJs (structured decisions) ===")
     w = winrate_test(aljs, min_n=args.min_n, n_perm=args.n_perm)
     print(f"  {w['n_aljs']} ALJs, {w['n_holdings']} decided holdings, base={w['base']}")
     print(f"  Q = {w['stat']}")

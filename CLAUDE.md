@@ -15,8 +15,17 @@ This repo is **many small subprojects inside one repo**. Read this file, then
   Read its `PROJECT_CONTEXT.md` for the full domain brief (who Nick is, what
   the corpus is, the capability ladder). Its `MIGRATION.md` describes the
   production corpus build that will eventually replace our data source.
-- **Production corpus repo** — doesn't exist yet. When it does, prototypes
-  re-point via `corpuslib` config and re-run unchanged.
+- **`/home/nick/Projects/cert_layoff_corpus`** — the production corpus build
+  (now exists). Its `output/` holds the first tier: **93 decisions, 2018–2025**,
+  schema v0.4.0 (richer than the spike — adds `procedure`, `board_action`
+  including structured resolution `artifacts`, `holdings[].notable`,
+  `authorities[].role/proposition`; `identity.district/alj` gained `canonical*`
+  but kept `.raw`; `pks_allowed`+`pks_not_allowed` merged to `pks_reduction`).
+  **Verified 2026-06-16: prototypes re-point and run unchanged** via
+  `CORPUS_ROOT=/home/nick/Projects/cert_layoff_corpus/output` — same relative
+  paths, non-breaking deltas (see STATUS lesson). No gold past 2015;
+  `alj.canonical_id` null this run (still surname-joining). Compose multi-era
+  views by symlinking decision dirs (`03-alj-scouting/make_merged_corpus.sh`).
 
 ## Data access
 

@@ -168,6 +168,31 @@ later, from validated pieces.
   mainly by the on-prem requirement. Natural arc: bakeoff (done) → W11 → W12, a
   three-part story. *(Discussion 2026-06-14.)*
 
+## Programs (multi-experiment prototypes)
+
+- **06. Coverage harness** *(none + local-LLM-heavy)* — **[specced → prototype 06]**
+  the unifying reframe of 04 (deep-research) + 05 (risk-memo): both are angles on one
+  job — **cover the corpus's *intellectual space* for a matter** — and the corpus is
+  *insight-only* (non-precedential), so the goal is coverage, not an on-point cite, and
+  grounding is a solved given used as a *measurement instrument*, not the product. Splits
+  coverage into **breadth = issue-spotting recall** (tractable by enumeration over the
+  bounded, fully-tagged taxonomy; the real risk is spotting the issue / cross-issue
+  interaction at all) and **depth = fact/reasoning recovery** (the hard, data-bounded
+  axis — reasoning lives only in the 404 structured decisions, not the gold summaries).
+  Makes both **measurable** against held-out real decisions (E0 scoreboard), then runs a
+  **bake-off** (E1: fixed-RAG vs taxonomy-sweep vs agentic vs divergence-adversarial vs a
+  frontier ceiling) to find the orchestration that maximizes coverage **per wall-clock
+  hour on local models** (privilege → on-box; no token budget → ~unlimited passes;
+  wall-clock the only constraint). **Subsumes W9 stage 2** (E1 arm C — can a *local*
+  model orchestrate the loop, never tested), **W10** (E2/D — splits/tensions via
+  divergence-grounded adversaries), and **W11** (E1/E4/E5 — orchestrated small-model
+  synthesis, now with a scoreboard). Key design moves: *context-divergence as a coverage
+  mechanism* (near-miss-tail adversary = coverage-recovery probe; adjacent-doctrine
+  adversary = cross-issue probe), *steering > model size* (in-context "treatise" packs,
+  with a measured bias-toward-dominant-pattern cost), and *agentic-vs-not is empirical*
+  (the bake-off decides). Pairs with the runtime-blackboard + corpus-memory concepts
+  below. *(Discussion 2026-06-17.)*
+
 ## Concepts (not yet shaped into prototypes)
 
 - Citation-graph analytics: which authorities (Bledsoe, Duax, Alexander…) do

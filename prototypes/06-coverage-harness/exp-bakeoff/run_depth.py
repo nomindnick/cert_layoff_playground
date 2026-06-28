@@ -51,18 +51,32 @@ def main():
     ap.add_argument("--think", choices=["on", "off"], default="on",
                     help="let the model emit reasoning tokens before answering")
     ap.add_argument("--num-predict", type=int, default=8000)
+    ap.add_argument("--balanced", action="store_true",
+                    help="RAG arm retrieves 50/50 district/respondent (counter the skew)")
+    ap.add_argument("--arms", default="closedbook,rag",
+                    help="comma list of arms to run: closedbook,rag (e.g. 'rag' to skip "
+                         "regenerating the retrieval-independent closed-book arm)")
+    ap.add_argument("--tag-suffix", default="",
+                    help="append to the tag (e.g. 'tk' for the thick eval) so a re-baseline "
+                         "doesn't clobber a prior same-model run")
     ap.add_argument("--smoke", action="store_true")
     a = ap.parse_args()
     if a.smoke:
         a.n, a.max_issues = 2, 1
     think = a.think == "on"
     tag = a.model.replace(":", "-") + (".think" if think else ".nothink")
+    if a.balanced:
+        tag += ".bal"
+    if a.tag_suffix:
+        tag += f".{a.tag_suffix}"
     rec = recoverable_map()
     np_cb = a.num_predict if think else 700
-    arms = {"closedbook": make_depth_arm(f"ollama:{a.model}", use_retrieval=False,
-                                         think=think, num_predict=np_cb),
-            "rag": make_depth_arm(f"ollama:{a.model}", use_retrieval=True, k=6,
-                                  think=think, num_predict=np_cb)}
+    all_arms = {"closedbook": make_depth_arm(f"ollama:{a.model}", use_retrieval=False,
+                                             think=think, num_predict=np_cb),
+                "rag": make_depth_arm(f"ollama:{a.model}", use_retrieval=True, k=6,
+                                      think=think, num_predict=np_cb, balanced=a.balanced)}
+    want = [s.strip() for s in a.arms.split(",") if s.strip()]
+    arms = {n: all_arms[n] for n in want if n in all_arms}
 
     items, key, count = [], {}, 0
     for m in load_evalset():

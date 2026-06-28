@@ -37,8 +37,8 @@ def render(d):
     L.append(f"*Evidence base: {den['gold_cites']} catalogued holdings "
              f"{span[0]}–{span[1]} across {den['n_districts']} districts and "
              f"{den['n_categories']} issue categories; "
-             f"{den['structured_holdings']} structured holdings from 2004/2009 "
-             f"({den['decided_holdings']} decided).*")
+             f"{den['structured_holdings']} with full structured extraction "
+             f"({den['decided_holdings']} with a recorded outcome).*")
     L.append("")
 
     # outcome
@@ -49,7 +49,7 @@ def render(d):
         L.append("")
         L.append(f"- Respondent-win rate **{o['win_rate']}** "
                  f"(95% CI {o['ci95'][0]}–{o['ci95'][1]}) vs corpus base "
-                 f"{o['base_rate']}, on {o['n_decided']} decided 2004/2009 holdings.")
+                 f"{o['base_rate']}, on {o['n_decided']} decided holdings.")
     L.append("")
 
     # issue footprint
@@ -67,7 +67,7 @@ def render(d):
     # persuasive arguments / outcomes by issue
     pa = d["persuasive_arguments"]
     if pa:
-        L.append("## By issue (2004/2009 decided holdings)")
+        L.append("## By issue (decided holdings)")
         for cat, v in pa.items():
             L.append(f"- **{lbl(cat)}**: respondent prevailed "
                      f"{v['respondent_wins']}/{v['decided']}.")

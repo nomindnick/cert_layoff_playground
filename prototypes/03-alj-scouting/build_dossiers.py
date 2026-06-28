@@ -16,8 +16,9 @@ from tendencies import bh_fdr, tendencies_for
 CAVEATS = [
     "ALJ identity is keyed on SURNAME only (the gold volumes cite surnames); "
     "distinct judges who share a surname cannot be separated here.",
-    "Structured outcome data covers only 2004 and 2009 — win-rate tendencies "
-    "rest on a small, two-year sample and are confounded by case mix.",
+    "Structured outcome data covers only the years extracted so far (a partial "
+    "corpus) — win-rate tendencies rest on a limited sample and are confounded "
+    "by case mix.",
     "The 35-year gold footprint is editorial (what expert editors chose to "
     "catalogue), not an exhaustive docket; issue mix reflects what this ALJ "
     "tends to HEAR, not necessarily how they rule.",
@@ -34,7 +35,7 @@ def win_interpretation(o, fdr_flag):
         return (f"Respondent-win rate {wr} vs corpus base {base} on {n} decided "
                 f"holdings — STATISTICALLY ROBUST: survives Benjamini-Hochberg "
                 f"correction across all tested ALJs. One of the few ALJs whose "
-                f"individual outcome tendency is defensible on two years of data.")
+                f"individual outcome tendency is statistically defensible.")
     if n >= 12 and p < 0.05:
         return (f"Respondent-win rate {wr} vs base {base} (p={p:.3f}) — "
                 f"NOMINALLY notable but does NOT survive multiple-comparison "

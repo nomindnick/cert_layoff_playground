@@ -51,6 +51,10 @@ def main():
     ap.add_argument("--think", choices=["on", "off"], default="on",
                     help="let the model emit reasoning tokens before answering")
     ap.add_argument("--num-predict", type=int, default=8000)
+    ap.add_argument("--call-timeout", type=int, default=900,
+                    help="per-analysis ollama socket timeout (s); a hung call fails THIS "
+                         "issue (recorded as error) and the run continues + checkpoints, "
+                         "instead of blocking the whole run")
     ap.add_argument("--balanced", action="store_true",
                     help="RAG arm retrieves 50/50 district/respondent (counter the skew)")
     ap.add_argument("--arms", default="closedbook,rag",
@@ -72,13 +76,38 @@ def main():
     rec = recoverable_map()
     np_cb = a.num_predict if think else 700
     all_arms = {"closedbook": make_depth_arm(f"ollama:{a.model}", use_retrieval=False,
-                                             think=think, num_predict=np_cb),
+                                             think=think, num_predict=np_cb,
+                                             timeout=a.call_timeout),
                 "rag": make_depth_arm(f"ollama:{a.model}", use_retrieval=True, k=6,
-                                      think=think, num_predict=np_cb, balanced=a.balanced)}
+                                      think=think, num_predict=np_cb, balanced=a.balanced,
+                                      timeout=a.call_timeout)}
     want = [s.strip() for s in a.arms.split(",") if s.strip()]
     arms = {n: all_arms[n] for n in want if n in all_arms}
 
-    items, key, count = [], {}, 0
+    runs = OUT / "runs"
+    tagged_inp = runs / f"depth.{tag}.input.json"
+    tagged_key = runs / f"depth.{tag}.key.json"
+
+    # RESUME: reload prior progress so a kill/crash/stall doesn't lose completed
+    # matters (run_depth checkpoints after each matter; rerun continues where it left off).
+    items, key = [], {}
+    if tagged_inp.exists() and tagged_key.exists():
+        items = json.loads(tagged_inp.read_text())
+        key = json.loads(tagged_key.read_text())
+    done_matters = {v["matter"] for v in key.values()}
+    if done_matters:
+        print(f"resume: {len(done_matters)} matters / {len(items)} items already done for {tag}",
+              flush=True)
+
+    def flush():
+        OUT.mkdir(parents=True, exist_ok=True)
+        runs.mkdir(parents=True, exist_ok=True)
+        for p in (OUT / "depth_judge_input.json", tagged_inp):
+            p.write_text(json.dumps(items, indent=1, ensure_ascii=False))
+        for p in (OUT / "depth_key.json", tagged_key):
+            p.write_text(json.dumps(key, indent=1))
+
+    count = 0
     for m in load_evalset():
         if count >= a.n:
             break
@@ -88,6 +117,9 @@ def main():
         if not issues:
             continue
         count += 1
+        if m["matter_id"] in done_matters:
+            print(f"{m['matter_id']}: already done, skip  ({count}/{a.n})", flush=True)
+            continue
         for arm_name, arm in arms.items():
             out = arm(m, issues)
             for pi in out["per_issue"]:
@@ -103,17 +135,12 @@ def main():
                 key[iid] = {"matter": m["matter_id"], "issue": pi["issue"],
                             "arm": arm_name, "n_evidence": pi.get("n_evidence", 0),
                             "cost_s": out["_cost"]["wall_clock_s"]}
-        print(f"{m['matter_id']}: {len(issues)} issue(s) x2 arms  ({count}/{a.n})")
+        flush()   # checkpoint after each matter — kill/stall-safe + resumable
+        print(f"{m['matter_id']}: {len(issues)} issue(s) x{len(arms)} arms  "
+              f"({count}/{a.n})  [checkpoint: {len(key)} items]", flush=True)
 
-    OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "depth_judge_input.json").write_text(json.dumps(items, indent=1, ensure_ascii=False))
-    (OUT / "depth_key.json").write_text(json.dumps(key, indent=1))
-    # tagged copies so a model/think sweep doesn't clobber prior runs
-    runs = OUT / "runs"
-    runs.mkdir(parents=True, exist_ok=True)
-    (runs / f"depth.{tag}.input.json").write_text(json.dumps(items, indent=1, ensure_ascii=False))
-    (runs / f"depth.{tag}.key.json").write_text(json.dumps(key, indent=1))
-    print(f"\ntag: {tag}  ({len(items)} judge items, {len(items)//2} matter-issues x 2 arms)")
+    flush()
+    print(f"\ntag: {tag}  ({len(items)} judge items, {len(arms)} arm(s))", flush=True)
     if a.smoke and items:
         print("\n--- sample SCRUBBED judge item (verify no names) ---")
         s = dict(items[0])

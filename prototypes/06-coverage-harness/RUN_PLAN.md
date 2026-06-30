@@ -52,8 +52,9 @@ bitter-lesson check, enforced as a baseline column, not a late experiment.
 | **ANCHOR** | off · on (anchored to cb prior) |
 
 **Beam state (update as we grind):**
-> CURRENT BEST CONFIG: _(Phase 0 baseline TBD)_
-> CURRENT BEST resp_acc / grounding / usefulness: _TBD_
+> CURRENT BEST CONFIG: gemma4:31b **closed-book** = the direction bar — resp_acc **80%**, overall 81%, grounding 0% (cites nothing from memory).
+> Naive-RAG = grounding-positive (53% cite / 100% resolve) but exposure-NEGATIVE (resp_acc 60%, −20pt vs cb). The system must beat BOTH at once.
+> BAR TO BEAT (insight north star): resp_acc ≥ ~80% AND grounding > 0 simultaneously.
 
 ---
 
@@ -138,10 +139,34 @@ V1→P0 · G1→P0 · S1/v5→P1 · D2→P1 · P1(static)→P1(R4) · G2→P2(DC
   ours). Per serialization rule, holding 2b + re-baseline generation until GPU clears. (Judge
   fan-out also held — could break a local run if the 27b is in use.)
 
-### Baseline scoreboard (Phase 0, thick set) — PENDING GPU
-config | base | resp_acc | grounding | cite-faith | usefulness | verdict
---- | --- | --- | --- | --- | --- | ---
-_(closed-book · naive-RAG · balanced-RAG · v4-rule-pres · 122b-cb-maxthink[raw-compute ref] · Opus-cb · Opus-RAG)_
+### Baseline scoreboard (Phase 0, thick set, n=20 resp-win) — IN PROGRESS
+| config | base | overall acc | resp_acc | grounding cite/resolve | verdict |
+|---|---|---|---|---|---|
+| closed-book | gemma4:31b | 81% | **80%** | 0% / — | direction bar; cites nothing from memory |
+| naive-RAG | gemma4:31b | 82% | **60%** | 53% / 100% | exposure-NEGATIVE (−20pt vs cb) + grounding-positive → **confirms "RAG is the problem, system is the lever" at n=20** |
+| closed-book | qwen3.5:35b | 75% | **75%** | 0% / — | direction ~tied with gemma; more "unclear" (hedges) |
+| naive-RAG | qwen3.5:35b | 79% | **70%** | 62% / 100% | exposure-negative (−5pt) but more RAG-robust than gemma |
+| balanced-RAG | gemma4:31b | 75% | **75%** | 61% / 100% | recovers exposure vs naive (60→75, shifts preds 16→27 resp) BUT over-predicts respondent → overall dips 82→75; ~TIES closed-book exposure + adds grounding, doesn't beat it |
+| 122b-cb (raw-compute ref) | qwen3.5:122b | 78% | **68%** | 0% / — | **bitter-lesson does NOT fire** — 122B ≈ 31-35B on direction (n=69, 3 rate-limited); scale is NOT the lever |
+| v4-rule-pres · Opus-cb/RAG | — | _deferred to redesigned suite_ | | | |
+
+**BITTER-LESSON READ:** all locals (31B/35B/122B) cluster at **68-80% resp_acc, statistically indistinguishable** — a 4× scale-up can't break the ~80% wall. So "just use a bigger model" is out, AND this reinforces the test-set concern: if scale + retrieval + balancing all bounce off the same wall, we can't tell "hard-case ceiling" from "measurement noise" without difficulty stratification. 122B+RAG and Opus-cb deferred to the redesigned suite (don't spend them on a set we're replacing).
+
+**KEY READ (Phase 0, n=20) — PRELIMINARY, NOT a settled call (Nick pushback 2026-06-29):**
+What the data supports: *the crude retrieval techniques tried so far (naive, balanced) don't add
+directional value over gemma cb (80%) ON THIS SET* — naive corrupts exposure, balanced recovers it
+at an overall-acc cost. What it does NOT support: "the corpus has no directional value." Three confounds:
+(1) 80% is not established as a ceiling — predict-then-ground / rules / decomposition untested;
+(2) **the set likely conflates EASY/routine holdings (which any competent model handles → inflate cb)
+with the HARD contested cases where corpus direction would matter** — an aggregate metric washes out
+localized help, and the balanced-RAG "recovers exposure, costs overall" result is equally consistent with
+"corpus helps direction on hard cases, adds noise on easy district-wins"; (3) too much faith in a 72-case
+unstratified set. → **predict-then-ground is a HYPOTHESIS, not a verdict.** Direction-vs-grounding is
+UNRESOLVED until a difficulty-stratified eval can separate hard from easy (see Phase 0.5 / new task).
+
+**Tripwire check:** direction-reversal did NOT fire — paired cb→RAG drop (gemma 80→60, qwen 75→70 on same 20 cases) confirms naive-RAG is exposure-negative on BOTH bases. ✓
+**PREMISE REVISION (complementarity RETIRED):** old n=7 said qwen cb 86% / gemma cb 43% (huge gap → "qwen for direction, gemma for soundness, run both"). Thick n=20: gemma cb **80%** (16/20) vs qwen cb **75%** (15/20) = a 1-case, indistinguishable gap → the n=7 numbers were noise. No direction/soundness tradeoff to exploit; both bases ~75-80% direction. **gemma4:31b = primary base** (slightly higher direction + overall acc), BUT the "gemma sounder" claim is still old-n=7 (usefulness panel not yet re-run on thick set — not locked). RAG-robustness differs: gemma −20pt vs qwen −5pt (gemma more swayed by retrieval).
+**Usefulness panel DEFERRED** on baselines (cheap-screen funnel — reserve the 308-agent panel for promoted system configs / batch later). Outcome (cheap) + grounding (free) run on every config.
 
 ## File / command map
 - Generation: `run_depth.py` (local), `run_depth_opus.py` (Opus subagent), `run_adversarial.py`

@@ -61,7 +61,7 @@ def _prompt(matter, issue, ev):
 
 
 def make_depth_arm(backend, use_retrieval=True, k=6, think=True, num_predict=8000,
-                   balanced=False):
+                   balanced=False, timeout=900):
     # think=True lets reasoning models emit a chain-of-thought before answering
     # (response comes back CoT-stripped); a generous num_predict keeps the CoT
     # from starving the answer (lab lesson). think=False suppresses reasoning.
@@ -75,7 +75,7 @@ def make_depth_arm(backend, use_retrieval=True, k=6, think=True, num_predict=800
             ev = retrieve(matter, iss, excl, k, balanced=balanced) if use_retrieval else []
             try:
                 txt = generate(backend, _prompt(matter, iss, ev), system=SYSTEM,
-                               think=think, options=opts)
+                               think=think, options=opts, timeout=timeout)
                 ncalls += 1
             except Exception as e:
                 txt = f"(error: {str(e)[:80]})"

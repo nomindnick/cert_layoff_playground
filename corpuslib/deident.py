@@ -98,7 +98,9 @@ def deidentify(text, rec):
             parts = name.split()
             last, first = parts[-1], parts[0]
         subs.append((name, ref))
-        firsts.add(first.split()[0].lower())
+        _fp = first.split()
+        if _fp:                       # guard malformed roster (e.g. "Smith," → empty first)
+            firsts.add(_fp[0].lower())
         if (len(last) >= 3 and last.lower() != alj
                 and last.lower() not in dist):
             subs.append((last, ref))
